@@ -1,28 +1,21 @@
 ---
-- hosts: all
-  become: true
-  pre_tasks:
+- name: OpenStack Service Setup
+  hosts: all
+  become: yes
+  vars_files:
+    - group_vars/neutron.yml
+    - group_vars/horizon.yml
+    - group_vars/cinder.yml
 
-  - name: Install Updates (Ubuntu)
-    tags: always
-    apt:
-      update_cache: yes
-    changed_when: false
-    when: ansible_distribution == "Ubuntu"
+  tasks:
+    - name: Configure and Install Neutron
+      include_role:
+        name: neutron
 
-  - name: Install packages on Ubuntu for OpenStack base Services
-    apt:
-      name:
-        - vim
-        - htop
-        - curl
-        - wget
-      state: present
-    when: ansible_distribution == "Ubuntu"
+    - name: Configure and Install Horizon
+      include_role:
+        name: horizon
 
-- hosts: ubuntu
-  become: true
-  roles:
-    - neutron
-    - horizon
-    - cinder
+    - name: Configure and Install Cinder
+      include_role:
+        name: cinder
