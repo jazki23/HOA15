@@ -1,4 +1,4 @@
---
+---
 - name: Installation of cinder packages and its sub-dependencies
   apt:
     name:
